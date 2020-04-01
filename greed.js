@@ -1,0 +1,52 @@
+/**
+ 
+Greed is a dice game played with five six-sided dice. Your mission, should you choose 
+to accept it, is to score a throw according to these rules. You will always be given 
+an array with five six-sided dice values.
+
+Three 1's => 1000 points
+Three 6's =>  600 points
+Three 5's =>  500 points
+Three 4's =>  400 points
+Three 3's =>  300 points
+Three 2's =>  200 points
+One   1   =>  100 points
+One   5   =>   50 point
+
+A single die can only be counted once in each roll. For example, a "5" can only count 
+as part of a triplet (contributing to the 500 points) or as a single 50 points, but not 
+both in the same roll.
+
+Throw       Score
+---------   ------------------
+5 1 3 4 1   50 + 2 * 100 = 250
+1 1 1 3 1   1000 + 100 = 1100
+2 4 4 5 4   400 + 50 = 450
+
+*/
+
+function score( dice ) {
+    const counts = {};
+    const tripletScores = { 1: 1000, 6: 600, 5: 500, 4: 400, 3: 300, 2: 200 };
+    const singleScores = { 1: 100, 5: 50 };
+    
+    dice.forEach((num, i) => {
+        counts[dice[i]] = counts[dice[i]] === undefined ? 1 : counts[dice[i]] + 1;
+    });
+    
+    
+    let score = 0;
+    
+    Object.keys(counts).forEach(key => {
+        if (counts[key] >= 3) {
+            score += tripletScores[key];
+            counts[key] -= 3;
+        }
+      
+        if (counts[key] > 0) {
+            score += singleScores[key] ? (singleScores[key] * counts[key]) : 0;
+        }
+    });
+    
+    return score;
+}
